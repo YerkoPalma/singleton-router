@@ -24,6 +24,12 @@
 $ npm install --save singleton-router
 ```
 
+or 
+
+```html
+<script type="text/javascript" src="https://unpkg.com/singleton-router@1.0.0/dist/bundle.min.js"></script>
+```
+
 ## Usage
 
 ```js
@@ -41,8 +47,8 @@ router.setRoot('/')
 router.start('#app')
 ```
 
-In your html, any clickeable element with an attribute `data-route` would navigate to the route specified there. So, for example, an anchor tag like `<a data-route="/about"></a>` would navigate to the `AboutView`.
-Programatic navigation can be done with the [`router.goToPath`](#router.goToPath(path [, title])) function.
+In your html, any clickeable element with an attribute `data-route` would navigate to the route specified there. So, for example, an anchor tag like `<a data-route="/about">about</a>` will navigate to the `AboutView`.
+Programatic navigation can be done with the [`router.goToPath`](#routergotopathpath--title) function.
 
 ## API
 
