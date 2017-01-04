@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <body>
+    <header>
+      <a data-route="/" href="">Home</a>
+      <a data-route="/user/friend" href="">Profile</a>
+      <a data-route="/anchor" href="">Anchor</a>
+    </header>
+    <div id="app">
+    </div>
+    <script type="text/javascript" src="app.js"></script>
+    <script type="text/javascript">
+      /* global RouterSingleton */
+      document.addEventListener('DOMContentLoaded', function () {
+        function onNavClick (path, link) {
+          var links = document.querySelectorAll('a')
+          Array.prototype.forEach.call(links, function (_link) {
+            _link.style.color = 'blue'
+          })
+          link.style.color = 'red'
+          document.title = path
+        }
+        
+        var router = RouterSingleton({ onNavClick: onNavClick })
+        
+        function h1 (text) {
+          return function (params, store) {
+            var title = document.createElement('h1')
+            var titleContent = document.createTextNode((text || 'Welcome ') + (params && params.name ? params.name : ''))
+            title.appendChild(titleContent)
+            return title
+          }
+        }
+        
+        function a (text) {
+          return function (params, store) {
+            var anchor = document.createElement('a')
+            anchor.className = 'dynamic'
+            anchor.href = ''
+            var anchorContent = document.createTextNode(text)
+            anchor.appendChild(anchorContent)
+            return anchor
+          }
+        }
+
+        router.addRoute('/', h1('You are in home'))
+        router.addRoute('/user/:name', h1())
+        router.addRoute('/anchor', a('click me!'), function () {
+          var anchor = document.querySelector('a.dynamic')
+          anchor.addEventListener('click', function (event) {
+            event.preventDefault()
+            // Notice that this add content outside of the root element, so is preserved through all the routes
+            document.body.appendChild(document.createTextNode('Yeah!'))
+          })
+        })
+        router.setRoot('/')
+        router.start('#app')
+      })
+    </script>
+  </body>
+</html>

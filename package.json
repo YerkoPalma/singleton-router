@@ -1,0 +1,41 @@
+{
+  "name": "singleton-router",
+  "version": "1.0.0",
+  "description": "Tiny singleton router for the browser",
+  "main": "index.js",
+  "repository": "YerkoPalma/singleton-router",
+  "files": [
+    "index.js",
+    "dist/bundle.js",
+    "dist/bundle.min.js"
+  ],
+  "scripts": {
+    "test": "standard --verbose | snazzy && ava",
+    "build": "mkdir -p dist && browserify -t es2040 -t rollupify -e index.js -o dist/bundle.js -s RouterSingleton && uglifyjs dist/bundle.js -o dist/bundle.min.js",
+    "start": "budo dist/bundle.js:app.js --verbose --pushstate -p 8080 -H '0.0.0.0' -- -t es2040 -t rollupify -s RouterSingleton"
+  },
+  "keywords": [
+    "router",
+    "client-router",
+    "browser",
+    "web",
+    "singleton"
+  ],
+  "author": "Yerko Palma <yerko.palma@usach.cl>",
+  "license": "ISC",
+  "dependencies": {
+    "url-pattern": "^1.0.3"
+  },
+  "devDependencies": {
+    "ava": "^0.17.0",
+    "babel-plugin-transform-es2015-classes": "^6.18.0",
+    "babel-preset-es2040": "^1.1.1",
+    "browserify": "^13.1.1",
+    "budo": "^9.3.1",
+    "es2040": "^1.2.4",
+    "rollupify": "^0.3.7",
+    "snazzy": "^5.0.0",
+    "standard": "^8.6.0",
+    "uglify-js": "^2.7.5"
+  }
+}
