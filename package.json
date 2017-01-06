@@ -2,7 +2,7 @@
   "name": "singleton-router",
   "version": "1.0.0",
   "description": "Tiny singleton router for the browser",
-  "main": "index.js",
+  "main": "dist/bundle.min.js",
   "repository": "YerkoPalma/singleton-router",
   "files": [
     "index.js",
