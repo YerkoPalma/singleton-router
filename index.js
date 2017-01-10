@@ -117,7 +117,7 @@ class Router {
       const child = this.rootEl.firstChild
       this.onRender(this.currentRoute.onStart(this.store), child)
     }
-    
+
     if (typeof this.currentRoute.cb === 'function') {
       try {
         this.currentRoute.cb()
