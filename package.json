@@ -26,15 +26,20 @@
   "dependencies": {
     "url-pattern": "^1.0.3"
   },
+  "ava": {
+    "require": [
+      "./helper.js"
+    ]
+  },
   "devDependencies": {
     "ava": "^0.17.0",
     "babel-plugin-transform-es2015-classes": "^6.18.0",
     "babel-preset-es2040": "^1.1.1",
+    "browser-env": "^2.0.19",
     "browserify": "^13.1.1",
     "budo": "^9.3.1",
     "es2040": "^1.2.4",
     "global": "^4.3.1",
-    "jsdom": "^9.9.1",
     "rollupify": "^0.3.7",
     "sinon": "^1.17.7",
     "snazzy": "^5.0.0",

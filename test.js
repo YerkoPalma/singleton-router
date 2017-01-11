@@ -1,26 +1,27 @@
-/* global SingletonRouter */
 import test from 'ava'
 // for testing purpose import the unminified version
-// import sinon from 'sinon'
-import jsdom from 'jsdom'
-
+import SingletonRouter from './dist/bundle.js'
 let router
+
+window.requestAnimationFrame = function (fn) { setImmediate(fn) }
+// window.location = {}
 
 test.afterEach(t => {
   router = {}
 })
 
-test('Resolve static routes', t => {
+test('Resolve static routes', async t => {
   t.plan(1)
-  jsdom.env(`<html><head></head><body></body></html>`, ['https://unpkg.com/singleton-router@1.0.1/dist/bundle.min.js'], (err, window) => {
-    t.ifError(err)
-    router = SingletonRouter()
-    router.addRoute('/', () => {})
-    router.setRoot('/')
-    router.start()
-
-    t.pass()
+  window.location.pathname = '/'
+  // document.addEventListener('DOMContentLoaded', e => {
+  router = SingletonRouter()
+  router.addRoute('/', () => document.createElement('h1'), () => {
+    t.truthy(document.querySelector('h1'))
   })
+  router.setRoot('/')
+  console.log(window.location.pathname)
+  router.start()
+  // })
 })
 
 // Resolve params in routes
