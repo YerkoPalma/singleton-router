@@ -22,9 +22,9 @@
           link.style.color = 'red'
           document.title = path
         }
-        
+
         var router = RouterSingleton({ onNavClick: onNavClick })
-        
+
         function h1 (text) {
           return function (params, store) {
             var title = document.createElement('h1')
@@ -33,7 +33,7 @@
             return title
           }
         }
-        
+
         function a (text) {
           return function (params, store) {
             var anchor = document.createElement('a')
