@@ -26,12 +26,12 @@ const server = http.createServer(function (req, res) {
 
 server.listen(port, ip, function () {
   console.log('Server running on ' + ip + ':' + port)
-  execa('casperjs', ['test', 'test/e2e.js'])
+  execa('casperjs', ['test', 'test/e2e.js', '--verbose'])
     .then(function (result) {
       console.log(result.stdout)
       server.close()
     }).catch(function (err) {
-      console.error(err)
+      console.log(err.stdout)
       server.close()
     })
 })

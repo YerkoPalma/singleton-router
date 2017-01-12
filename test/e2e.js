@@ -1,19 +1,17 @@
-/* global casper __utils__ */
-casper.test.begin('Google search retrieves 10 or more results', 5, function suite (test) {
+/* global casper */
+var utils = require('utils')
+
+casper.test.begin('Simple static routes are rendered', 2, function suite (test) {
   casper.start('0.0.0.0:8080', function () {
-    test.assertTitle('Google', 'google homepage title is the one expected')
-    test.assertExists('form[action="/search"]', 'main form is found')
-    this.fill('form[action="/search"]', {
-      q: 'casperjs'
-    }, true)
+    console.log('Hi there!!')
+    casper.page.evaluate(function () {
+      utils.bump(document)
+    })
   })
 
-  casper.then(function () {
-    test.assertTitle('casperjs - Recherche Google', 'google title is ok')
-    test.assertUrlMatch(/q=casperjs/, 'search term has been submitted')
-    test.assertEval(function () {
-      return __utils__.findAll('h3.r').length >= 10
-    }, 'google search for \'casperjs\' retrieves 10 or more results')
+  casper.then(function waitH1 () {
+    test.assertExists('h1')
+    test.assertSelectorHasText('h1', 'You are in home')
   })
 
   casper.run(function () {
