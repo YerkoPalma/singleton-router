@@ -127,6 +127,7 @@ class Router {
       link.addEventListener('click', function (e) {
         e.preventDefault()
         if (!link.getAttribute('data-bind')) self.goToPath(link.getAttribute('data-route'))
+        if (typeof self.onNavClick === 'function') self.onNavClick(link.getAttribute('data-route'), link)
       })
     })
     if (typeof this.currentRoute.cb === 'function') {
