@@ -53,6 +53,7 @@ class Router {
     Array.prototype.forEach.call(links, link => {
       link.addEventListener('click', event => {
         event.preventDefault()
+        link.setAttribute('data-bind', +new Date())
         this.goToPath(link.getAttribute('data-route'))
         if (typeof this.onNavClick === 'function') this.onNavClick(link.getAttribute('data-route'), link)
       })
@@ -107,17 +108,27 @@ class Router {
   }
 
   manageState () {
+    var self = this
     if (this.currentPath === this.previousPath) return
-    if (!this.rootEl.hasChildNodes()) {
-      this.rootEl.appendChild(this.currentRoute.onStart(this.store))
+    // currentView is the new view to be added
+    const currentView = this.currentRoute.onStart(this.store)
+
+    if (!this.rootEl.hasChildNodes(currentView)) {
+      this.rootEl.appendChild(currentView)
     } else if (!this.onRender || typeof this.onRender !== 'function') {
       const child = this.rootEl.firstChild
-      this.rootEl.replaceChild(this.currentRoute.onStart(this.store), child)
+      this.rootEl.replaceChild(currentView, child)
     } else {
       const child = this.rootEl.firstChild
-      this.onRender(this.currentRoute.onStart(this.store), child)
+      this.onRender(currentView, child)
     }
-
+    var links = document.querySelectorAll('a[data-route]')
+    Array.prototype.forEach.call(links, link => {
+      link.addEventListener('click', function (e) {
+        e.preventDefault()
+        if (!link.getAttribute('data-bind')) self.goToPath(link.getAttribute('data-route'))
+      })
+    })
     if (typeof this.currentRoute.cb === 'function') {
       try {
         this.currentRoute.cb()

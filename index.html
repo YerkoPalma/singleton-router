@@ -10,7 +10,7 @@
     </header>
     <div id="app">
     </div>
-    <script type="text/javascript" src="https://unpkg.com/singleton-router@1.0.1/dist/bundle.min.js"></script>
+    <script type="text/javascript" src="dist/bundle.js"></script>
     <script type="text/javascript">
       /* global RouterSingleton */
       document.addEventListener('DOMContentLoaded', function () {
@@ -36,9 +36,11 @@
 
         function a (text) {
           return function (params, store) {
+
             var anchor = document.createElement('a')
             anchor.className = 'dynamic'
             anchor.href = ''
+            anchor.dataset.route = '/user/faker'
             var anchorContent = document.createTextNode(text)
             anchor.appendChild(anchorContent)
             return anchor
@@ -47,14 +49,7 @@
 
         router.addRoute('/', h1('You are in home'))
         router.addRoute('/user/:name', h1())
-        router.addRoute('/anchor', a('click me!'), function () {
-          var anchor = document.querySelector('a.dynamic')
-          anchor.addEventListener('click', function (event) {
-            event.preventDefault()
-            // Notice that this add content outside of the root element, so is preserved through all the routes
-            document.body.appendChild(document.createTextNode('Yeah!'))
-          })
-        })
+        router.addRoute('/anchor', a('click me!'))
         router.setRoot('/')
         router.start('#app')
       })
