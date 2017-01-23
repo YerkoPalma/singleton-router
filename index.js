@@ -42,6 +42,7 @@ class Router {
     this.root = null
     this.rootEl = null
     this.store = null
+    this.default = null
     this.onRender = options && options.onRender ? options.onRender : null
     this.onNavClick = options && options.onNavClick ? options.onNavClick : null
 
@@ -90,6 +91,10 @@ class Router {
     }
   }
 
+  notFound (notFoundView) {
+    this.default = new Route(null, notFoundView)
+  }
+
   goToPath (path, title = null) {
     this.previousPath = window.location.pathname
     // Only process real changes.
@@ -110,6 +115,7 @@ class Router {
   manageState () {
     var self = this
     if (this.currentPath === this.previousPath) return
+    if (!this.currentRoute && this.default) this.currentRoute = this.default
     // currentView is the new view to be added
     const currentView = this.currentRoute.onStart(this.store)
 
@@ -156,7 +162,7 @@ class Route {
   constructor (pattern, view, cb) {
     this.pattern = pattern
     this.cb = cb
-    this._urlPattern = new UrlPattern(pattern)
+    this._urlPattern = pattern ? new UrlPattern(pattern) : null
     this.view = view
     this.params = null
     this.path = null
@@ -169,12 +175,12 @@ class Route {
 
   setParams () {
     if (!this.path) return false
-    this.params = this._urlPattern.match(this.path)
+    this.params = this._urlPattern ? this._urlPattern.match(this.path) : null
   }
 
   onStart (store) {
     this.path = window.location.pathname
-    this.params = this._urlPattern.match(this.path)
+    this.params = this._urlPattern ? this._urlPattern.match(this.path) : null
     return this.view(this.params, store)
   }
 }
