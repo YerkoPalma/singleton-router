@@ -15,3 +15,23 @@ test('singleton pattern', t => {
   var router_ = SingletonRouter()
   t.deepEqual(router, router_)
 })
+
+test('Router', t => {
+  t.test('window should handle popstate', t => {
+    t.plan(1)
+    var router = SingletonRouter()
+    var events = window.listeners('popstate')
+    t.ok(events)
+  })
+
+  t.test('setStore should set the store property', t => {
+    t.plan(2)
+    var router = SingletonRouter()
+    t.equal(router.store, null)
+    var store = {}
+    router.setStore(store)
+    t.equal(router.store, store)
+  })
+
+  t.skip('addRoute')
+})
