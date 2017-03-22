@@ -43,8 +43,10 @@ class Router {
     this.rootEl = null
     this.store = null
     this.default = null
+    this._debug = false
     this.onRender = options && options.onRender ? options.onRender : null
     this.onNavClick = options && options.onNavClick ? options.onNavClick : null
+    this.prefix = options && options.prefix ? options.prefix : ''
 
     window.addEventListener('popstate', e => {
       this.onPopState(e)
@@ -84,11 +86,14 @@ class Router {
   }
 
   getRoute (path) {
+    var posibleRoutes = []
     for (var pattern in this.routes) {
       if (this.routes.hasOwnProperty(pattern)) {
-        if (this.routes[pattern]._urlPattern.match(path) !== null) return this.routes[pattern]
+        if (this.routes[pattern]._urlPattern.match(path) !== null) posibleRoutes.push(this.routes[pattern])
       }
     }
+    if (posibleRoutes.length === 1) return posibleRoutes[0]
+    // there are more than one candidate
   }
 
   notFound (notFoundView) {

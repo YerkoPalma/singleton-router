@@ -10,7 +10,7 @@
     "dist/bundle.min.js"
   ],
   "scripts": {
-    "test": "standard --verbose | snazzy && node test/server.js",
+    "test": "standard --verbose | snazzy && ava --verbose",
     "build": "mkdir -p dist && browserify -t es2040 -t rollupify -e index.js -o dist/bundle.js -s RouterSingleton && uglifyjs dist/bundle.js -o dist/bundle.min.js",
     "start": "budo dist/bundle.js:app.js --verbose --pushstate -p 8080 -H '0.0.0.0' -- -t es2040 -t rollupify -s RouterSingleton"
   },
@@ -26,25 +26,16 @@
   "dependencies": {
     "url-pattern": "^1.0.3"
   },
-  "ava": {
-    "require": [
-      "./helper.js"
-    ]
-  },
   "devDependencies": {
     "ava": "^0.17.0",
     "babel-plugin-transform-es2015-classes": "^6.18.0",
     "babel-preset-es2040": "^1.1.1",
-    "browser-env": "^2.0.19",
     "browserify": "^13.1.1",
     "budo": "^9.3.1",
-    "casperjs": "^1.1.3",
     "es2040": "^1.2.4",
-    "execa": "^0.6.0",
     "global": "^4.3.1",
     "parseurl": "^1.3.1",
     "rollupify": "^0.3.7",
-    "send": "^0.14.1",
     "sinon": "^1.17.7",
     "snazzy": "^5.0.0",
     "standard": "^8.6.0",

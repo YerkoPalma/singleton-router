@@ -5,6 +5,7 @@
   <body>
     <header>
       <a data-route="/" href="">Home</a>
+      <a data-route="/user" href="">Users</a>
       <a data-route="/user/friend" href="">Profile</a>
       <a data-route="/anchor" href="">Anchor</a>
       <a data-route="/fake" href="">Anchor</a>
@@ -50,6 +51,7 @@
 
         router.addRoute('/', h1('You are in home'))
         router.addRoute('/user/:name', h1())
+        router.addRoute('/user', h1('Wooow is working'))
         router.addRoute('/anchor', a('click me!'))
         router.notFound(h1('Not Found'))
         router.setRoot('/')
