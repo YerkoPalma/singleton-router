@@ -1,7 +1,17 @@
-import test from 'ava'
+/* eslint-disable no-global-assign */
+/* eslint-disable no-native-reassign */
+/* eslint-disable no-unused-vars */
 
-// import SingletonRouter from './'
+const test = require('tape')
 
-test('SingletonRouter', t => {
-  t.pass()
+global.window = require('./window')
+global.document = require('./document')
+const SingletonRouter = require('./index.es5.js')
+
+test('singleton pattern', t => {
+  t.plan(1)
+  var router = SingletonRouter()
+  router.something = {}
+  var router_ = SingletonRouter()
+  t.deepEqual(router, router_)
 })

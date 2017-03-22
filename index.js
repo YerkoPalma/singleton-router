@@ -19,7 +19,6 @@ import UrlPattern from 'url-pattern'
  *  <a data-route="/user/123">John Profile</a>
  */
 class RouterSingleton {
-
   static getRouter (options) {
     if (typeof window.RouterInstance_ !== 'undefined') {
       return window.RouterInstance_
@@ -29,7 +28,6 @@ class RouterSingleton {
 
     return window.RouterInstance_
   }
-
 }
 
 class Router {
@@ -100,7 +98,8 @@ class Router {
     this.default = new Route(null, notFoundView)
   }
 
-  goToPath (path, title = null) {
+  goToPath (path, title) {
+    title = title || null
     this.previousPath = window.location.pathname
     // Only process real changes.
     if (path === window.location.pathname) {
