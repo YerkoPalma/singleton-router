@@ -127,6 +127,46 @@ test('start validations', t => {
   t.throws(() => { router.start({}) })
 })
 
+test('onPopState', t => {
+  t.plan(1)
+  router.requestStateUpdate = sinon.spy()
+  router.onPopState()
+  // window.emit('popstate', { preventDefault: () => {} })
+  t.equal(router.requestStateUpdate.callCount, 1)
+})
+
+test('getRoute', t => {
+  t.plan(6)
+  // path must always be a string
+  t.throws(() => { router.getRoute() })
+  t.throws(() => { router.getRoute(null) })
+  t.throws(() => { router.getRoute({}) })
+  // if there is no route in router, getRoute always return null
+  t.equal(router.getRoute(''), null)
+  t.equal(router.getRoute('/'), null)
+  // if there is any route, return the best match
+  router.addRoute('/', () => { t.fail() })
+  router.addRoute('/post', () => { t.pass() })
+  router.addRoute('/post/:id', () => { t.fail() })
+  var route = router.getRoute('/post')
+  route.view()
+})
+
+test('notFound', t => {
+  t.plan(7)
+  // notFoundView should be a function
+  t.throws(() => { router.notFound() })
+  t.throws(() => { router.notFound(null) })
+  t.throws(() => { router.notFound({}) })
+  t.throws(() => { router.notFound('') })
+  // this.default should be defined
+  t.equal(router.default, null)
+  router.notFound(() => {})
+  t.notEqual(router.defualt, null)
+  // should not add anything to the routes object
+  t.equal(Object.keys(router.routes).length, 0)
+})
+
 function beforeEach (test, handler) {
   return function tapish (name, listener) {
     test(name, function (assert) {

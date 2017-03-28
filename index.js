@@ -75,6 +75,7 @@ class Router {
   }
 
   setRoot (path) {
+    path = path || '/'
     this.root = this.getRoute(path)
     if (!this.root) {
       this.addRoute('/', () => document.createElement('div'))
@@ -91,11 +92,12 @@ class Router {
   }
 
   onPopState (e) {
-    e.preventDefault()
+    if (e) e.preventDefault()
     this.requestStateUpdate(e)
   }
 
   getRoute (path) {
+    assert.equal(typeof path, 'string')
     var posibleRoutes = []
     for (var pattern in this.routes) {
       if (this.routes.hasOwnProperty(pattern)) {
@@ -104,9 +106,11 @@ class Router {
     }
     if (posibleRoutes.length === 1) return posibleRoutes[0]
     // there are more than one candidate
+    if (posibleRoutes.length === 0) return null
   }
 
   notFound (notFoundView) {
+    assert.equal(typeof notFoundView, 'function')
     this.default = new Route(null, notFoundView)
   }
 
