@@ -18,11 +18,13 @@ Element.prototype.addEventListener = Element.prototype.on
 var emitter = new Element()
 
 document.querySelector = function (selector) {
+  emitter.selector = selector
   return emitter
 }
 document.querySelectorAll = function (selector) {
-  return [emitter, emitter]
+  return [document.querySelector(selector), document.querySelector(selector)]
 }
+document.body = document.querySelector('body')
 /* document.body = html`<body></body>`
 document.createElement = html.createElement
  */

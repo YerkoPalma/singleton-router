@@ -7,6 +7,7 @@ var test = require('tape')
 global.window = require('./window')
 global.document = require('./document')
 const SingletonRouter = require('./index.es5.js')
+const sinon = require('sinon')
 var router = null
 
 test = beforeEach(test, t => {
@@ -94,6 +95,36 @@ test('setRoot', t => {
   var routes = Object.keys(router.routes)
   t.equal(routes.length, 2)
   t.equal(router.root, router.routes['/'])
+})
+
+test('start', t => {
+  t.plan(3)
+
+  router.addRoute('/', () => {})
+  router.setRoot('/')
+  router.requestStateUpdate = sinon.spy()
+  // without selector
+  router.start()
+  t.equal(router.rootEl, document.body)
+  // with selector
+  router.start('#app')
+  t.equal(router.rootEl, document.querySelector('#app'))
+  // should call requestStateUpdate
+  t.equal(router.requestStateUpdate.callCount, 2)
+})
+
+test('start validations', t => {
+  t.plan(4)
+  router.requestStateUpdate = sinon.spy()
+  // there must be at least one route defined
+  // root route must be set
+  t.throws(() => { router.start() })
+  router.addRoute('/', () => {})
+  router.setRoot('/')
+  t.doesNotThrow(() => { router.start() })
+  // selector must be undefined or a string
+  t.throws(() => { router.start(null) })
+  t.throws(() => { router.start({}) })
 })
 
 function beforeEach (test, handler) {

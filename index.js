@@ -75,7 +75,7 @@ class Router {
   }
 
   setRoot (path) {
-    this.root = this.getRoute(path) // || new Route('/', () => document.createElement('div'))
+    this.root = this.getRoute(path)
     if (!this.root) {
       this.addRoute('/', () => document.createElement('div'))
       this.root = this.routes['/']
@@ -83,6 +83,9 @@ class Router {
   }
 
   start (selector) {
+    assert(typeof selector === 'undefined' || typeof selector === 'string')
+    assert(Object.keys(this.routes).length > 0)
+    assert.notEqual(this.root, null)
     this.rootEl = document.querySelector(selector) || document.body
     this.requestStateUpdate()
   }
