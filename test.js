@@ -12,16 +12,9 @@ var router = null
 test = beforeEach(test, t => {
   // called before each thing
   console.log('reseting router')
-  router = SingletonRouter()
-
-  // when done call
-  t.end()
-})
-test = afterEach(test, t => {
-  // called after each thing
-  console.log('clearing router')
   window.RouterInstance_ = undefined
   router = undefined
+  router = SingletonRouter()
 
   // when done call
   t.end()
@@ -93,7 +86,6 @@ test('setRoot', t => {
   t.plan(5)
 
   router.addRoute('/root', () => {})
-  console.log(router.routes)
   // with a string, search for a route with that path, otherwiese throw
   t.doesNotThrow(() => { router.setRoot('/root') })
   t.equal(router.root, router.routes['/root'])
@@ -101,7 +93,7 @@ test('setRoot', t => {
   t.doesNotThrow(() => { router.setRoot() })
   var routes = Object.keys(router.routes)
   t.equal(routes.length, 2)
-  t.equal(router.root, router.routes['/root'])
+  t.equal(router.root, router.routes['/'])
 })
 
 function beforeEach (test, handler) {
@@ -114,19 +106,6 @@ function beforeEach (test, handler) {
       }
 
       handler(assert)
-    })
-  }
-}
-function afterEach (test, handler) {
-  return function tapish (name, listener) {
-    test(name, function (assert) {
-      var _end = assert.end
-      assert.end = function () {
-        assert.end = _end
-        handler(assert)
-      }
-
-      listener(assert)
     })
   }
 }

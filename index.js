@@ -75,7 +75,11 @@ class Router {
   }
 
   setRoot (path) {
-    this.root = this.getRoute(path) || new Route('/', () => document.createElement('div'))
+    this.root = this.getRoute(path) // || new Route('/', () => document.createElement('div'))
+    if (!this.root) {
+      this.addRoute('/', () => document.createElement('div'))
+      this.root = this.routes['/']
+    }
   }
 
   start (selector) {
