@@ -2,16 +2,34 @@
 /* eslint-disable no-native-reassign */
 /* eslint-disable no-unused-vars */
 
-const test = require('tape')
+var test = require('tape')
 
 global.window = require('./window')
 global.document = require('./document')
 const SingletonRouter = require('./index.es5.js')
+var router = null
+
+test = beforeEach(test, t => {
+  // called before each thing
+  console.log('reseting router')
+  router = SingletonRouter()
+
+  // when done call
+  t.end()
+})
+test = afterEach(test, t => {
+  // called after each thing
+  console.log('clearing router')
+  window.RouterInstance_ = undefined
+  router = undefined
+
+  // when done call
+  t.end()
+})
 
 test('singleton pattern', t => {
   t.plan(1)
 
-  var router = SingletonRouter()
   router.something = {}
   var router_ = SingletonRouter()
   t.deepEqual(router, router_)
@@ -21,7 +39,6 @@ test('Router', t => {
   t.test('window should handle popstate', t => {
     t.plan(1)
 
-    var router = SingletonRouter()
     var events = window.listeners('popstate')
     t.ok(events)
   })
@@ -29,7 +46,6 @@ test('Router', t => {
   t.test('setStore should set the store property', t => {
     t.plan(2)
 
-    var router = SingletonRouter()
     t.equal(router.store, null)
     var store = {}
     router.setStore(store)
@@ -39,7 +55,6 @@ test('Router', t => {
   t.test('addRoute', t => {
     t.plan(3)
 
-    var router = SingletonRouter()
     var routes = Object.keys(router.routes)
     t.equal(routes.length, 0)
     router.addRoute('/r', () => {})
@@ -51,7 +66,6 @@ test('Router', t => {
   t.test('addRoute validations', t => {
     t.plan(6)
 
-    var router = SingletonRouter()
     // add Route should require pattern and view
     t.throws(() => { router.addRoute() })
     t.throws(() => { router.addRoute(null, null) })
@@ -67,27 +81,52 @@ test('Router', t => {
     t.plan(3)
 
     // path undefined or string
-    var router = SingletonRouter()
     router.addRoute('/', () => {})
     t.throws(() => { router.setRoot(null) })
     t.throws(() => { router.setRoot({}) })
     // if string path inserted, must be a valid route
     t.throws(() => { router.setRoot('/fake') })
   })
-
-  t.test('setRoot', t => {
-    t.plan(5)
-
-    var router = SingletonRouter()
-    router.addRoute('/root', () => {})
-    console.log(router.routes)
-    // with a string, search for a route with that path, otherwiese throw
-    t.doesNotThrow(() => { router.setRoot('/root') })
-    t.equal(router.root, router.routes['/root'])
-    // with undefined, creates a route on path '/'
-    t.doesNotThrow(() => { router.setRoot() })
-    var routes = Object.keys(router.routes)
-    t.equal(routes.length, 2)
-    t.equal(router.root, router.routes['/root'])
-  })
 })
+
+test('setRoot', t => {
+  t.plan(5)
+
+  router.addRoute('/root', () => {})
+  console.log(router.routes)
+  // with a string, search for a route with that path, otherwiese throw
+  t.doesNotThrow(() => { router.setRoot('/root') })
+  t.equal(router.root, router.routes['/root'])
+  // with undefined, creates a route on path '/'
+  t.doesNotThrow(() => { router.setRoot() })
+  var routes = Object.keys(router.routes)
+  t.equal(routes.length, 2)
+  t.equal(router.root, router.routes['/root'])
+})
+
+function beforeEach (test, handler) {
+  return function tapish (name, listener) {
+    test(name, function (assert) {
+      var _end = assert.end
+      assert.end = function () {
+        assert.end = _end
+        listener(assert)
+      }
+
+      handler(assert)
+    })
+  }
+}
+function afterEach (test, handler) {
+  return function tapish (name, listener) {
+    test(name, function (assert) {
+      var _end = assert.end
+      assert.end = function () {
+        assert.end = _end
+        handler(assert)
+      }
+
+      listener(assert)
+    })
+  }
+}
