@@ -1,4 +1,5 @@
 import UrlPattern from 'url-pattern'
+import assert from 'assert'
 
 /*
  *  Router usage:
@@ -66,6 +67,10 @@ class Router {
   }
 
   addRoute (pattern, view, cb) {
+    assert.equal(typeof pattern, 'string')
+    assert.equal(typeof view, 'function')
+    assert(typeof cb === 'undefined' || typeof cb === 'function')
+
     this.routes[pattern] = new Route(pattern, view, cb)
   }
 
