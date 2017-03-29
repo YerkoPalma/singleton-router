@@ -24,8 +24,8 @@ inherits(Window, EventEmitter)
 
 Window.prototype.addEventListener = Window.prototype.on
 Window.prototype.requestAnimationFrame = function (cb) {
-  var $this = window.RouterInstance_ || this
-  setImmediate(cb.call($this))
+  var $this = window.RouterInstance_ || {}
+  cb.call($this)
 }
 
 module.exports = new Window()

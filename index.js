@@ -125,6 +125,7 @@ class Router {
     this.currentPath = path
     this.previousRoute = this.currentRoute || this.root
     this.currentRoute = this.getRoute(this.currentPath)
+    assert(this.currentRoute)
 
     window.history.pushState(undefined, title, path)
     window.requestAnimationFrame(() => {

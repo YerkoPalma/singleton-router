@@ -3,6 +3,7 @@
 /* eslint-disable no-unused-vars */
 
 var test = require('tape')
+var assert = require('assert')
 
 global.window = require('./window')
 global.document = require('./document')
@@ -168,23 +169,39 @@ test('notFound', t => {
 })
 
 test('goToPath', t => {
+  t.plan(8)
   // for the same path don't do anything
   t.equal(router.currentPath, null)
   window.location.pathname = '/'
   router.goToPath('/')
   t.equal(router.currentPath, null)
   // should throw if there is no route match
-  t.throws(router.goToPath('/route'))
+  t.throws(() => { router.goToPath('/route') }, assert.AssertionError)
   // should call manage state
   router.manageState = sinon.spy()
   router.addRoute('/', () => {})
   router.addRoute('/route', () => {})
-  router.goToPath('/')
+  router.setRoot('/')
+  router.goToPath('/route')
   t.equal(router.manageState.callCount, 1)
   // should update currentPath
+  t.equal(router.currentPath, '/route')
   // should update previousPath
+  t.equal(router.previousPath, '/')
   // should update previousRoute
+  t.equal(router.previousRoute, router.getRoute('/'))
   // should update currentRoute
+  t.equal(router.currentRoute, router.getRoute('/route'))
+})
+
+test('manageState', t => {
+  // should do nothing when is the same path
+  // when there is no currentRoute, set to default if present
+  // if rootEl has no childs, append view
+  // if rootEl has childs, replace with view
+  // if router define custom render function, call that
+  // currentRoute should call cb if defined
+  t.end()
 })
 
 function beforeEach (test, handler) {
