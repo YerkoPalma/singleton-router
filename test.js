@@ -167,6 +167,26 @@ test('notFound', t => {
   t.equal(Object.keys(router.routes).length, 0)
 })
 
+test('goToPath', t => {
+  // for the same path don't do anything
+  t.equal(router.currentPath, null)
+  window.location.pathname = '/'
+  router.goToPath('/')
+  t.equal(router.currentPath, null)
+  // should throw if there is no route match
+  t.throws(router.goToPath('/route'))
+  // should call manage state
+  router.manageState = sinon.spy()
+  router.addRoute('/', () => {})
+  router.addRoute('/route', () => {})
+  router.goToPath('/')
+  t.equal(router.manageState.callCount, 1)
+  // should update currentPath
+  // should update previousPath
+  // should update previousRoute
+  // should update currentRoute
+})
+
 function beforeEach (test, handler) {
   return function tapish (name, listener) {
     test(name, function (assert) {

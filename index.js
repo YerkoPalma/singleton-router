@@ -116,12 +116,12 @@ class Router {
 
   goToPath (path, title) {
     title = title || null
-    this.previousPath = window.location.pathname
     // Only process real changes.
     if (path === window.location.pathname) {
       return
     }
 
+    this.previousPath = window.location.pathname
     this.currentPath = path
     this.previousRoute = this.currentRoute || this.root
     this.currentRoute = this.getRoute(this.currentPath)
