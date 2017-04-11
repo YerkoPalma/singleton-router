@@ -216,6 +216,22 @@ test('manageState', t => {
   // currentRoute should call cb if defined
 })
 
+test('request state update', t => {
+  t.plan(3)
+
+  router.manageState = sinon.spy()
+  router.addRoute('/foo', () => {})
+  router.addRoute('/', () => {})
+  router.setRoot('/')
+  router.start()
+  window.location.pathname = '/foo'
+  router.currentPath = '/'
+  router.requestStateUpdate()
+  t.equal(router.previousPath, '/')
+  t.equal(router.currentPath, '/foo')
+  t.ok(router.manageState.calledTwice)
+})
+
 function beforeEach (test, handler) {
   return function tapish (name, listener) {
     test(name, function (assert) {
