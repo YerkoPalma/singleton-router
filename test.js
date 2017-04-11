@@ -13,7 +13,6 @@ var router = null
 
 test = beforeEach(test, t => {
   // called before each thing
-  console.log('reseting router')
   window.RouterInstance_ = undefined
   router = undefined
   router = SingletonRouter()
@@ -195,13 +194,26 @@ test('goToPath', t => {
 })
 
 test('manageState', t => {
+  t.plan(3)
   // should do nothing when is the same path
+  router.addRoute('/foo', () => {})
+  router.addRoute('/bar', () => {})
+  router.notFound(() => true)
+  router.setRoot('/foo')
+  router.start()
+  var preRouter = router
+  router.manageState()
+  t.equal(preRouter, router)
+  router.previousPath = '/foo'
+  router.currentPath = '/bar'
+  router.manageState()
   // when there is no currentRoute, set to default if present
+  t.ok(router.rootEl.appendChild.calledWith(router.default.view()))
   // if rootEl has no childs, append view
+  t.ok(router.rootEl.appendChild.calledThrice)
   // if rootEl has childs, replace with view
   // if router define custom render function, call that
   // currentRoute should call cb if defined
-  t.end()
 })
 
 function beforeEach (test, handler) {
