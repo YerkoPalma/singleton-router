@@ -140,7 +140,8 @@ class Router {
     // currentView is the new view to be added
     const currentView = this.currentRoute.onStart(this.store)
 
-    if (!this.rootEl.hasChildNodes(currentView)) {
+    // if (!this.rootEl.hasChildNodes(currentView)) {
+    if (currentView.parentNode !== this.rootEl) {
       this.rootEl.appendChild(currentView)
     } else if (!this.onRender || typeof this.onRender !== 'function') {
       const child = this.rootEl.firstChild
