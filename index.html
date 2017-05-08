@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <style type="text/css">
+      #app {
+        height: 97vh;
+        transition: all 0.5s;
+      }
+      .t {
+        transition: all 0.5s;
+      }
+      .o-0 {
+        opacity: 0;
+      }
+    </style>
   </head>
   <body>
     <header>
@@ -25,7 +37,7 @@
           document.title = path
         }
 
-        var router = RouterSingleton({ onNavClick: onNavClick })
+        var router = RouterSingleton({ onNavClick: onNavClick, onRender: onRender })
 
         function h1 (text) {
           return function (params, store) {
@@ -49,6 +61,25 @@
           }
         }
 
+        function onRender (currentView, previousView) {
+          // make dissappear the previousView
+          if (previousView && previousView.classList) {
+            previousView.classList.add('t')
+            previousView.classList.add('o-0')
+          }
+          previousView.addEventListener('transitionend', function (e) {
+            if (currentView && currentView.classList) {
+              currentView.classList.add('t')
+              currentView.classList.add('o-0')
+            }
+            // e.stopPropagation()
+            // replace it with the currentView
+            router.rootEl.appendChild(currentView)
+            router.rootEl.removeChild(previousView)
+            // make it appear
+            if (currentView && currentView.classList) currentView.classList.remove('o-0')
+          })
+        }
         router.addRoute('/', h1('You are in home'))
         router.addRoute('/user/:name', h1())
         router.addRoute('/user', h1('Wooow is working'))

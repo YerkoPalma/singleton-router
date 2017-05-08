@@ -13,7 +13,7 @@
     "pretest": "rollup index.js --format cjs --output index.es5.js",
     "test": "standard --verbose | snazzy && tape test.js | tap-summary",
     "posttest": "rm -f index.es5.js",
-    "build": "mkdir -p dist && browserify -t es2040 -t rollupify -e index.js -o dist/bundle.js -s RouterSingleton && uglifyjs dist/bundle.js -o dist/bundle.min.js",
+    "build": "mkdir -p dist && browserify -t rollupify -t babelify -e index.js -o dist/bundle.js -s RouterSingleton && uglifyjs dist/bundle.js -o dist/bundle.min.js",
     "start": "budo dist/bundle.js:app.js --verbose --pushstate -p 8080 -H '0.0.0.0' -- -t es2040 -t rollupify -s RouterSingleton"
   },
   "standard": {
@@ -36,9 +36,10 @@
   "devDependencies": {
     "babel-plugin-transform-es2015-classes": "^6.23.0",
     "babel-preset-es2040": "^1.1.1",
+    "babelify": "^7.3.0",
     "bel": "^4.5.1",
     "browserify": "^14.1.0",
-    "budo": "^9.4.7",
+    "budo": "^10.0.3",
     "es2040": "^1.2.5",
     "global": "^4.3.1",
     "inherits": "^2.0.3",
@@ -46,10 +47,10 @@
     "rollup": "^0.41.6",
     "rollupify": "^0.3.9",
     "sinon": "^2.1.0",
-    "snazzy": "^6.0.0",
-    "standard": "^9.0.2",
+    "snazzy": "^7.0.0",
+    "standard": "^10.0.2",
     "tap-summary": "^3.0.1",
     "tape": "^4.6.3",
-    "uglify-js": "^2.8.14"
+    "uglify-js": "^3.0.1"
   }
 }

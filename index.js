@@ -39,6 +39,7 @@ class Router {
     this.currentRoute = null
     this.previousRoute = null
     this.root = null
+    this.firstRender = true
     this.rootEl = null
     this.store = null
     this.default = null
@@ -125,7 +126,7 @@ class Router {
     this.currentPath = path
     this.previousRoute = this.currentRoute || this.root
     this.currentRoute = this.getRoute(this.currentPath)
-    assert(this.currentRoute)
+    // assert(this.currentRoute)
 
     window.history.pushState(undefined, title, path)
     window.requestAnimationFrame(() => {
@@ -141,13 +142,14 @@ class Router {
     const currentView = this.currentRoute.onStart(this.store)
 
     // if (!this.rootEl.hasChildNodes(currentView)) {
-    if (currentView.parentNode !== this.rootEl) {
+    if (this.firstRender && currentView) {
+      this.firstRender = false
       this.rootEl.appendChild(currentView)
     } else if (!this.onRender || typeof this.onRender !== 'function') {
-      const child = this.rootEl.firstChild
+      const child = this.rootEl.firstElementChild || this.rootEl.firstChild
       this.rootEl.replaceChild(currentView, child)
     } else {
-      const child = this.rootEl.firstChild
+      const child = this.rootEl.firstElementChild || this.rootEl.firstChild
       this.onRender(currentView, child)
     }
     var links = document.querySelectorAll('a[data-route]')
