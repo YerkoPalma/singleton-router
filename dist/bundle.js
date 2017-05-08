@@ -185,10 +185,10 @@ var Router = function () {
         this.firstRender = false;
         this.rootEl.appendChild(currentView);
       } else if (!this.onRender || typeof this.onRender !== 'function') {
-        var child = this.rootEl.firstElementChild || this.rootEl.firstChild;
+        var child = this.rootEl.lasttElementChild || this.rootEl.lastChild;
         this.rootEl.replaceChild(currentView, child);
       } else {
-        var _child = this.rootEl.firstElementChild || this.rootEl.firstChild;
+        var _child = this.rootEl.lasttElementChild || this.rootEl.lastChild;
         this.onRender(currentView, _child);
       }
       var links = document.querySelectorAll('a[data-route]');

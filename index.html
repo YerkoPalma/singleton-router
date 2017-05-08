@@ -64,7 +64,8 @@
         function onRender (currentView, previousView) {
           // make dissappear the previousView
           if (previousView && previousView.classList) {
-            previousView.classList.add('t')
+            // previousView.classList.add('t')
+            previousView.style.transition =
             previousView.classList.add('o-0')
           }
           previousView.addEventListener('transitionend', function (e) {

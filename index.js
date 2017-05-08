@@ -146,10 +146,10 @@ class Router {
       this.firstRender = false
       this.rootEl.appendChild(currentView)
     } else if (!this.onRender || typeof this.onRender !== 'function') {
-      const child = this.rootEl.firstElementChild || this.rootEl.firstChild
+      const child = this.rootEl.lasttElementChild || this.rootEl.lastChild
       this.rootEl.replaceChild(currentView, child)
     } else {
-      const child = this.rootEl.firstElementChild || this.rootEl.firstChild
+      const child = this.rootEl.lasttElementChild || this.rootEl.lastChild
       this.onRender(currentView, child)
     }
     var links = document.querySelectorAll('a[data-route]')
