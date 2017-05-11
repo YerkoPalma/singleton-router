@@ -56,7 +56,7 @@ Programatic navigation can be done with the [`router.goToPath`](#routergotopathp
 
 There is a single function exposed, the function returns the instance of the router. The instance is also saved to the global window object as `RouterInstance_`. It accepts an optional `options` object, the availaible options are:
 
-- onRender(currentView, previousView): By default, the router use the [`replaceChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node/replaceChild) function to render the view, you can replace it to add animations, or use some html diffing function to improve performance. Notice that the function is ran inside a [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) call, so don't need to include it yourself.
+- onRender(currentView, previousView, cb): By default, the router use the [`replaceChild`](https://developer.mozilla.org/en-US/docs/Web/API/Node/replaceChild) function to render the view, you can replace it to add animations, or use some html diffing function to improve performance. Notice that the function is ran inside a [`requestAnimationFrame`](https://developer.mozilla.org/en-US/docs/Web/API/window/requestAnimationFrame) call, so don't need to include it yourself. Also, when defined, you get a third parameter, that's the callback defined on each `addRoute` method.
 - onNavClick(path, element): If provided, is executed after any element with the `data-route` attribute in it. Useful to mark `active` links in navigation menus.
 
 ### router.setStore(store)
@@ -71,7 +71,7 @@ Add routes to the router. The arguments are:
 - `view`: A function that returns an HtmlElement, the function hast two arguments:
   - `params`: The value of the params for that route.
   - `store`: the store object set before by `router.setStore`.
-  - `callback`: Optional function that runs after the view is rendered to the DOM.
+  - `callback`: Optional function that runs after the view is rendered to the DOM. Note that if you define a `onRender` function, then you MUST handle yourself this callback.
 
 ### router.setRoot(path)
 

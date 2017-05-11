@@ -189,7 +189,7 @@ var Router = function () {
         this.rootEl.replaceChild(currentView, child);
       } else {
         var _child = this.rootEl.lasttElementChild || this.rootEl.lastChild;
-        this.onRender(currentView, _child);
+        this.onRender(currentView, _child, this.currentRoute.cb);
       }
       var links = document.querySelectorAll('a[data-route]');
       Array.prototype.forEach.call(links, function (link) {
@@ -199,7 +199,7 @@ var Router = function () {
           if (typeof self.onNavClick === 'function') self.onNavClick(link.getAttribute('data-route'), link);
         });
       });
-      if (typeof this.currentRoute.cb === 'function') {
+      if ((!this.onRender || typeof this.onRender !== 'function') && typeof this.currentRoute.cb === 'function') {
         try {
           this.currentRoute.cb();
         } catch (ex) {

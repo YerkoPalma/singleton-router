@@ -61,11 +61,10 @@
           }
         }
 
-        function onRender (currentView, previousView) {
+        function onRender (currentView, previousView, cb) {
           // make dissappear the previousView
           if (previousView && previousView.classList) {
-            // previousView.classList.add('t')
-            previousView.style.transition =
+            previousView.classList.add('t')
             previousView.classList.add('o-0')
           }
           previousView.addEventListener('transitionend', function (e) {
@@ -73,16 +72,24 @@
               currentView.classList.add('t')
               currentView.classList.add('o-0')
             }
-            // e.stopPropagation()
             // replace it with the currentView
             router.rootEl.appendChild(currentView)
             router.rootEl.removeChild(previousView)
             // make it appear
             if (currentView && currentView.classList) currentView.classList.remove('o-0')
+            if (cb) cb(router.currentRoute.params)
+            var links = document.querySelectorAll('a[data-route]')
+            Array.prototype.forEach.call(links, function (link) {
+              link.addEventListener('click', function (e) {
+                e.preventDefault()
+                if (!link.getAttribute('data-bind')) router.goToPath(link.getAttribute('data-route'))
+                if (typeof router.onNavClick === 'function') router.onNavClick(link.getAttribute('data-route'), link)
+              })
+            })
           })
         }
         router.addRoute('/', h1('You are in home'))
-        router.addRoute('/user/:name', h1())
+        router.addRoute('/user/:name', h1(), function (params) { console.log(params.name + ' from cb')})
         router.addRoute('/user', h1('Wooow is working'))
         router.addRoute('/anchor', a('click me!'))
         router.notFound(h1('Not Found'))

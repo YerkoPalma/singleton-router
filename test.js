@@ -232,6 +232,25 @@ test('request state update', t => {
   t.ok(router.manageState.calledTwice)
 })
 
+test('onRender', t => {
+  t.plan(2)
+
+  var onRender = (previous, current, _cb) => {
+    cb()
+    t.pass()
+  }
+  var cb = () => { t.pass() }
+  window.RouterInstance_ = undefined
+  router = undefined
+  router = SingletonRouter({ onRender: onRender })
+
+  router.addRoute('/foo', () => {}, cb)
+  router.addRoute('/', () => {})
+  router.setRoot('/')
+  router.start()
+  router.goToPath('/foo')
+})
+
 function beforeEach (test, handler) {
   return function tapish (name, listener) {
     test(name, function (assert) {
