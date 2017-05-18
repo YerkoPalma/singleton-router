@@ -37,8 +37,8 @@ function Router (options) {
     link.addEventListener('click', function (event) {
       event.preventDefault()
       link.setAttribute('data-bind', +new Date())
-      this.goToPath(link.getAttribute('data-route'))
-      if (typeof this.onNavClick === 'function') this.onNavClick(link.getAttribute('data-route'), link)
+      self.goToPath(link.getAttribute('data-route'))
+      if (typeof self.onNavClick === 'function') self.onNavClick(link.getAttribute('data-route'), link)
     })
   })
 }

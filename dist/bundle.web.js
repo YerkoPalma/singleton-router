@@ -38,8 +38,8 @@ function Router (options) {
     link.addEventListener('click', function (event) {
       event.preventDefault()
       link.setAttribute('data-bind', +new Date())
-      this.goToPath(link.getAttribute('data-route'))
-      if (typeof this.onNavClick === 'function') this.onNavClick(link.getAttribute('data-route'), link)
+      self.goToPath(link.getAttribute('data-route'))
+      if (typeof self.onNavClick === 'function') self.onNavClick(link.getAttribute('data-route'), link)
     })
   })
 }
@@ -102,7 +102,7 @@ Router.prototype.goToPath = function goToPath (path, title) {
   if (path === window.location.pathname) {
     return
   }
-
+  var self = this
   this.previousPath = window.location.pathname
   this.currentPath = path
   this.previousRoute = this.currentRoute || this.root
@@ -111,7 +111,7 @@ Router.prototype.goToPath = function goToPath (path, title) {
 
   window.history.pushState(undefined, title, path)
   window.requestAnimationFrame(function () {
-    this.manageState()
+    self.manageState()
   })
 }
 
@@ -120,17 +120,18 @@ Router.prototype.manageState = function manageState () {
   if (this.currentPath === this.previousPath) return
   if (!this.currentRoute && this.default) this.currentRoute = this.default
   // currentView is the new view to be added
-  const currentView = this.currentRoute.onStart(this.store)
+  var currentView = this.currentRoute.onStart(this.store)
+  var child = null
 
   // if (!this.rootEl.hasChildNodes(currentView)) {
   if (this.firstRender && currentView) {
     this.firstRender = false
     this.rootEl.appendChild(currentView)
   } else if (!this.onRender || typeof this.onRender !== 'function') {
-    const child = this.rootEl.lasttElementChild || this.rootEl.lastChild
+    child = this.rootEl.lasttElementChild || this.rootEl.lastChild
     this.rootEl.replaceChild(currentView, child)
   } else {
-    const child = this.rootEl.lasttElementChild || this.rootEl.lastChild
+    child = this.rootEl.lasttElementChild || this.rootEl.lastChild
     this.onRender(currentView, child, this.currentRoute.cb)
   }
   var links = document.querySelectorAll('a[data-route]')
@@ -156,12 +157,11 @@ Router.prototype.requestStateUpdate = function requestStateUpdate (e) {
   this.currentRoute = this.getRoute(e && e.target !== window
                                     ? e.target.getAttribute('data-route')
                                     : window.location.pathname)
-
+  var self = this
   window.requestAnimationFrame(function () {
-    this.manageState()
+    self.manageState()
   })
 }
-
 
 function Route (pattern, view, cb) {
   this.pattern = pattern
