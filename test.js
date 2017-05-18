@@ -7,13 +7,13 @@ var assert = require('assert')
 
 global.window = require('./window')
 global.document = require('./document')
-const SingletonRouter = require('./index.es5.js')
-const sinon = require('sinon')
+var SingletonRouter = require('./')
+var sinon = require('sinon')
 var router = null
 
-test = beforeEach(test, t => {
+test = beforeEach(test, function (t) {
   // called before each thing
-  window.RouterInstance_ = undefined
+  window.RouterInstance = undefined
   router = undefined
   router = SingletonRouter()
 
@@ -21,7 +21,7 @@ test = beforeEach(test, t => {
   t.end()
 })
 
-test('singleton pattern', t => {
+test('singleton pattern', function (t) {
   t.plan(1)
 
   router.something = {}
@@ -29,15 +29,15 @@ test('singleton pattern', t => {
   t.deepEqual(router, router_)
 })
 
-test('Router', t => {
-  t.test('window should handle popstate', t => {
+test('Router', function (t) {
+  t.test('window should handle popstate', function (t) {
     t.plan(1)
 
     var events = window.listeners('popstate')
     t.ok(events)
   })
 
-  t.test('setStore should set the store property', t => {
+  t.test('setStore should set the store property', function (t) {
     t.plan(2)
 
     t.equal(router.store, null)
@@ -46,61 +46,61 @@ test('Router', t => {
     t.equal(router.store, store)
   })
 
-  t.test('addRoute', t => {
+  t.test('addRoute', function (t) {
     t.plan(3)
 
     var routes = Object.keys(router.routes)
     t.equal(routes.length, 0)
-    router.addRoute('/r', () => {})
+    router.addRoute('/r', function () {})
     routes = Object.keys(router.routes)
     t.equal(routes.length, 1)
     t.ok(router.routes['/r'])
   })
 
-  t.test('addRoute validations', t => {
+  t.test('addRoute validations', function (t) {
     t.plan(6)
 
     // add Route should require pattern and view
-    t.throws(() => { router.addRoute() })
-    t.throws(() => { router.addRoute(null, null) })
+    t.throws(function () { router.addRoute() })
+    t.throws(function () { router.addRoute(null, null) })
     // pattern must be a string and view a function
-    t.throws(() => { router.addRoute({}, {}) })
-    t.doesNotThrow(() => { router.addRoute('', () => {}) })
+    t.throws(function () { router.addRoute({}, {}) })
+    t.doesNotThrow(function () { router.addRoute('', function () {}) })
     // if callback is present, it must be a function
-    t.throws(() => { router.addRoute('', () => {}, '') })
-    t.doesNotThrow(() => { router.addRoute('', () => {}, () => {}) })
+    t.throws(function () { router.addRoute('', function () {}, '') })
+    t.doesNotThrow(function () { router.addRoute('', function () {}, function () {}) })
   })
 
-  t.test('setRoot validations', t => {
+  t.test('setRoot validations', function (t) {
     t.plan(3)
 
     // path undefined or string
-    router.addRoute('/', () => {})
-    t.throws(() => { router.setRoot(null) })
-    t.throws(() => { router.setRoot({}) })
+    router.addRoute('/', function () {})
+    t.throws(function () { router.setRoot(null) })
+    t.throws(function () { router.setRoot({}) })
     // if string path inserted, must be a valid route
-    t.throws(() => { router.setRoot('/fake') })
+    t.throws(function () { router.setRoot('/fake') })
   })
 })
 
-test('setRoot', t => {
+test('setRoot', function (t) {
   t.plan(5)
 
-  router.addRoute('/root', () => {})
+  router.addRoute('/root', function () {})
   // with a string, search for a route with that path, otherwiese throw
-  t.doesNotThrow(() => { router.setRoot('/root') })
+  t.doesNotThrow(function () { router.setRoot('/root') })
   t.equal(router.root, router.routes['/root'])
   // with undefined, creates a route on path '/'
-  t.doesNotThrow(() => { router.setRoot() })
+  t.doesNotThrow(function () { router.setRoot() })
   var routes = Object.keys(router.routes)
   t.equal(routes.length, 2)
   t.equal(router.root, router.routes['/'])
 })
 
-test('start', t => {
+test('start', function (t) {
   t.plan(3)
 
-  router.addRoute('/', () => {})
+  router.addRoute('/', function () {})
   router.setRoot('/')
   router.requestStateUpdate = sinon.spy()
   // without selector
@@ -113,12 +113,12 @@ test('start', t => {
   t.equal(router.requestStateUpdate.callCount, 2)
 })
 
-test('start validations', t => {
+test('start validations', function (t) {
   t.plan(4)
   router.requestStateUpdate = sinon.spy()
   // there must be at least one route defined
   // root route must be set
-  t.throws(() => { router.start() })
+  t.throws(function () { router.start() })
   router.addRoute('/', () => {})
   router.setRoot('/')
   t.doesNotThrow(() => { router.start() })
@@ -240,7 +240,7 @@ test('onRender', t => {
     t.pass()
   }
   var cb = () => { t.pass() }
-  window.RouterInstance_ = undefined
+  window.RouterInstance = undefined
   router = undefined
   router = SingletonRouter({ onRender: onRender })
 

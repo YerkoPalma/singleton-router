@@ -11,7 +11,6 @@
     "dist/bundle.web.min.js"
   ],
   "scripts": {
-    "pretest": "rollup index.js --format cjs --output index.es5.js",
     "test": "standard --verbose | snazzy && tape test.js | tap-summary",
     "posttest": "rm -f index.es5.js",
     "build": "mkdir -p dist && squash index.js > dist/bundle.js",
@@ -20,7 +19,7 @@
   },
   "standard": {
     "ignore": [
-      "index.es5.js"
+      "dist/"
     ]
   },
   "keywords": [
