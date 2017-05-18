@@ -26,9 +26,10 @@ function Router (options) {
   this.onRender = options && options.onRender ? options.onRender : null
   this.onNavClick = options && options.onNavClick ? options.onNavClick : null
   this.prefix = options && options.prefix ? options.prefix : ''
+  var self = this
 
-  window.addEventListener('popstate', e => {
-    this.onPopState(e)
+  window.addEventListener('popstate', function (e) {
+    self.onPopState(e)
   })
 
   var links = document.querySelectorAll('[data-route]')
@@ -132,7 +133,7 @@ Router.prototype.manageState = function manageState () {
     this.onRender(currentView, child, this.currentRoute.cb)
   }
   var links = document.querySelectorAll('a[data-route]')
-  Array.prototype.forEach.call(links, link => {
+  Array.prototype.forEach.call(links, function (link) {
     link.addEventListener('click', function (e) {
       e.preventDefault()
       if (!link.getAttribute('data-bind')) self.goToPath(link.getAttribute('data-route'))
