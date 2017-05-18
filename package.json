@@ -1,6 +1,6 @@
 {
   "name": "singleton-router",
-  "version": "1.4.2",
+  "version": "2.0.0",
   "description": "Tiny singleton router for the browser",
   "main": "index.js",
   "repository": "YerkoPalma/singleton-router",
