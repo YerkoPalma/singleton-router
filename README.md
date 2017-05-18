@@ -27,7 +27,7 @@ $ npm install --save singleton-router
 or 
 
 ```html
-<script type="text/javascript" src="https://unpkg.com/singleton-router@1.0.0/dist/bundle.min.js"></script>
+<script type="text/javascript" src="https://unpkg.com/singleton-router@2.0.0/dist/bundle.min.js"></script>
 ```
 
 ## Usage
