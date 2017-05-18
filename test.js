@@ -119,15 +119,15 @@ test('start validations', function (t) {
   // there must be at least one route defined
   // root route must be set
   t.throws(function () { router.start() })
-  router.addRoute('/', () => {})
+  router.addRoute('/', function () {})
   router.setRoot('/')
-  t.doesNotThrow(() => { router.start() })
+  t.doesNotThrow(function () { router.start() })
   // selector must be undefined or a string
-  t.throws(() => { router.start(null) })
-  t.throws(() => { router.start({}) })
+  t.throws(function () { router.start(null) })
+  t.throws(function () { router.start({}) })
 })
 
-test('onPopState', t => {
+test('onPopState', function (t) {
   t.plan(1)
   router.requestStateUpdate = sinon.spy()
   router.onPopState()
@@ -135,39 +135,39 @@ test('onPopState', t => {
   t.equal(router.requestStateUpdate.callCount, 1)
 })
 
-test('getRoute', t => {
+test('getRoute', function (t) {
   t.plan(6)
   // path must always be a string
-  t.throws(() => { router.getRoute() })
-  t.throws(() => { router.getRoute(null) })
-  t.throws(() => { router.getRoute({}) })
+  t.throws(function () { router.getRoute() })
+  t.throws(function () { router.getRoute(null) })
+  t.throws(function () { router.getRoute({}) })
   // if there is no route in router, getRoute always return null
   t.equal(router.getRoute(''), null)
   t.equal(router.getRoute('/'), null)
   // if there is any route, return the best match
-  router.addRoute('/', () => { t.fail() })
-  router.addRoute('/post', () => { t.pass() })
-  router.addRoute('/post/:id', () => { t.fail() })
+  router.addRoute('/', function () { t.fail() })
+  router.addRoute('/post', function () { t.pass() })
+  router.addRoute('/post/:id', function () { t.fail() })
   var route = router.getRoute('/post')
   route.view()
 })
 
-test('notFound', t => {
+test('notFound', function (t) {
   t.plan(7)
   // notFoundView should be a function
-  t.throws(() => { router.notFound() })
-  t.throws(() => { router.notFound(null) })
-  t.throws(() => { router.notFound({}) })
-  t.throws(() => { router.notFound('') })
+  t.throws(function () { router.notFound() })
+  t.throws(function () { router.notFound(null) })
+  t.throws(function () { router.notFound({}) })
+  t.throws(function () { router.notFound('') })
   // this.default should be defined
   t.equal(router.default, null)
-  router.notFound(() => {})
+  router.notFound(function () {})
   t.notEqual(router.defualt, null)
   // should not add anything to the routes object
   t.equal(Object.keys(router.routes).length, 0)
 })
 
-test('goToPath', t => {
+test('goToPath', function (t) {
   t.plan(7)
   // for the same path don't do anything
   t.equal(router.currentPath, null)
@@ -178,8 +178,8 @@ test('goToPath', t => {
   // t.throws(() => { router.goToPath('/route') }, assert.AssertionError)
   // should call manage state
   router.manageState = sinon.spy()
-  router.addRoute('/', () => {})
-  router.addRoute('/route', () => {})
+  router.addRoute('/', function () {})
+  router.addRoute('/route', function () {})
   router.setRoot('/')
   router.goToPath('/route')
   t.equal(router.manageState.callCount, 1)
@@ -193,12 +193,12 @@ test('goToPath', t => {
   t.equal(router.currentRoute, router.getRoute('/route'))
 })
 
-test('manageState', t => {
+test('manageState', function (t) {
   t.plan(3)
   // should do nothing when is the same path
-  router.addRoute('/foo', () => {})
-  router.addRoute('/bar', () => {})
-  router.notFound(() => true)
+  router.addRoute('/foo', function () {})
+  router.addRoute('/bar', function () {})
+  router.notFound(function () { return true })
   router.setRoot('/foo')
   router.start()
   var preRouter = router
@@ -216,12 +216,12 @@ test('manageState', t => {
   // currentRoute should call cb if defined
 })
 
-test('request state update', t => {
+test('request state update', function (t) {
   t.plan(3)
 
   router.manageState = sinon.spy()
-  router.addRoute('/foo', () => {})
-  router.addRoute('/', () => {})
+  router.addRoute('/foo', function () {})
+  router.addRoute('/', function () {})
   router.setRoot('/')
   router.start()
   window.location.pathname = '/foo'
@@ -232,20 +232,20 @@ test('request state update', t => {
   t.ok(router.manageState.calledTwice)
 })
 
-test('onRender', t => {
+test('onRender', function (t) {
   t.plan(2)
 
-  var onRender = (previous, current, _cb) => {
+  var onRender = function (previous, current, _cb) {
     cb()
     t.pass()
   }
-  var cb = () => { t.pass() }
+  var cb = function () { t.pass() }
   window.RouterInstance = undefined
   router = undefined
   router = SingletonRouter({ onRender: onRender })
 
-  router.addRoute('/foo', () => {}, cb)
-  router.addRoute('/', () => {})
+  router.addRoute('/foo', function () {}, cb)
+  router.addRoute('/', function () {})
   router.setRoot('/')
   router.start()
   router.goToPath('/foo')
