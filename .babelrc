@@ -1,4 +1,0 @@
-{
-  presets: ["es2040"],
-  plugins: ["transform-es2015-classes"]
-}
