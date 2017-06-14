@@ -85,9 +85,9 @@ Router.prototype.getRoute = function getRoute (path) {
       if (this.routes[pattern]._urlPattern.match(path) !== null) posibleRoutes.push(this.routes[pattern])
     }
   }
-  if (posibleRoutes.length === 1) return posibleRoutes[0]
   // there are more than one candidate
   if (posibleRoutes.length === 0) return null
+  return posibleRoutes[0]
 }
 
 Router.prototype.notFound = function notFound (notFoundView) {
